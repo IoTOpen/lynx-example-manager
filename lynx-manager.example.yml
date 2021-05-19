@@ -1,0 +1,7 @@
+api:
+  base: https://domain.tld
+  key: <YOUR API KEY>
+mqtt:
+  broker: tcp://domain.tld:port
+lynx:
+  installation_id: 1
