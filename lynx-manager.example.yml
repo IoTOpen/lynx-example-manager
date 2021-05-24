@@ -1,0 +1,6 @@
+api:
+  base: https://domain.tld
+  key: <YOUR API KEY>
+  broker: tcp://domain.tld:port
+lynx:
+  installation_id: 1
