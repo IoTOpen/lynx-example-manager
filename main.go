@@ -22,8 +22,8 @@ func configure() {
 
 	viper.SetDefault("api.base", "https://domain.tld")
 	viper.SetDefault("api.key", "secret")
+	viper.SetDefault("api.broker", "tcp://domain.tld:port")
 	viper.SetDefault("lynx.installation_id", 1)
-	viper.SetDefault("mqtt.broker", "tcp://domain.tld:port")
 
 	if err := viper.ReadInConfig(); err != nil {
 		_ = viper.SafeWriteConfig()
@@ -33,7 +33,7 @@ func configure() {
 
 func lynxClientSetup() {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker(viper.GetString("mqtt.broker"))
+	opts.AddBroker(viper.GetString("api.broker"))
 	opts.SetCleanSession(true)
 	opts.SetClientID("lynx-manager-example")
 	opts.SetConnectTimeout(time.Second)
@@ -65,7 +65,7 @@ func getOrCreateDevice(installationID int64) *lynx.Device {
 	}
 	if len(devices) == 0 {
 		dev := &lynx.Device{
-			Type:           "Virtual",
+			Type:           "virtual",
 			InstallationID: installationID,
 			Meta: lynx.Meta{
 				"name":         "Go-lynx-example",
@@ -80,7 +80,7 @@ func getOrCreateDevice(installationID int64) *lynx.Device {
 			Type:           "temperature",
 			InstallationID: installationID,
 			Meta: lynx.Meta{
-				"name":         fmt.Sprintf("%d-temperature", dev.ID),
+				"name":         fmt.Sprintf("%d - temperature", dev.ID),
 				"device_id":    fmt.Sprintf("%d", dev.ID),
 				"topic_read":   "obj/example/temperature",
 				"example.type": "go-lynx",
