@@ -8,4 +8,4 @@ This is a example of how to imports data to the lynx platform by the means of de
 * Login to Lynx AAM
     * Create a new installation
     * Generate new API key
-* Create a new configuration file based on the [lynx-manager.example.yml](lynx-manager.example.yml)and name it `lynx-manager.yml` and place it in the root folder of the project.
+* Create a new configuration file based on the [lynx-manager.example.yml](lynx-manager.example.yml) and name it `lynx-manager.yml` and place it in the root folder of the project.
