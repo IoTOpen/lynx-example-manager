@@ -98,6 +98,10 @@ func main() {
 	configure()
 	lynxClientSetup()
 	installationID := viper.GetInt64("lynx.installation_id")
+	installation, err := client.GetInstallation(installationID)
+	if err != nil {
+		log.Fatalln("Failed to get installation:", err)
+	}
 	dev := getOrCreateDevice(installationID)
 	functions, err := client.GetFunctions(installationID, map[string]string{
 		"example.type": "go-lynx",
@@ -116,7 +120,7 @@ func main() {
 				return
 			case <-ticker.C:
 				t := time.Now().Unix()
-				publish(functions[0], &lynx.Message{
+				publish(functions[0], installation.ClientID, &lynx.Message{
 					Value:     generateTemperature(t),
 					Timestamp: t,
 				})
@@ -129,8 +133,8 @@ func main() {
 	done <- true
 }
 
-func publish(fn *lynx.Function, message *lynx.Message) {
-	topic, _ := fn.Meta["topic_read"]
+func publish(fn *lynx.Function, clientID int64, message *lynx.Message) {
+	topic := fmt.Sprintf("%d/%s", clientID, fn.Meta["topic_read"])
 	if err := client.Publish(topic, message, 0); err != nil {
 		log.Println("Failed to publish on MQTT:", err)
 	}
