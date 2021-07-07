@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/IoTOpen/go-lynx"
-	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/spf13/viper"
 	"log"
 	"math"
@@ -22,7 +21,11 @@ func configure() {
 
 	viper.SetDefault("api.base", "https://domain.tld")
 	viper.SetDefault("api.key", "secret")
-	viper.SetDefault("api.broker", "tcp://domain.tld:port")
+
+	viper.SetDefault("mqtt.broker", "tcp://domain.tld:port")
+	viper.SetDefault("mqtt.client_id", "manager-example")
+	viper.SetDefault("mqtt.connection_log", true)
+
 	viper.SetDefault("lynx.installation_id", 1)
 
 	if err := viper.ReadInConfig(); err != nil {
@@ -32,17 +35,12 @@ func configure() {
 }
 
 func lynxClientSetup() {
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker(viper.GetString("api.broker"))
-	opts.SetCleanSession(true)
-	opts.SetClientID("lynx-manager-example")
-	opts.SetConnectTimeout(time.Second)
-
+	opts := lynx.NewMqttOptions(viper.Sub("mqtt"), nil, nil)
 	client = lynx.NewClient(&lynx.Options{
 		Authenticator: lynx.AuthApiKey{
 			Key: viper.GetString("api.key"),
 		},
-		ApiBase:     viper.GetString("api.base"),
+		APIBase:     viper.GetString("api.base"),
 		MqttOptions: opts,
 	})
 

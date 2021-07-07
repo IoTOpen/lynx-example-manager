@@ -1,6 +1,9 @@
 api:
   base: https://domain.tld
   key: <YOUR API KEY>
+mqtt:
   broker: tcp://domain.tld:port
+  client_id: manager-example
+  connection_log: true
 lynx:
   installation_id: 1
